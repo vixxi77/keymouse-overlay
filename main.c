@@ -28,11 +28,17 @@ void main(){
 		XNextEvent(display, &event);
 
 		if(XGetEventData(display, &event.xcookie) && event.xcookie.type == GenericEvent){
+				XIRawEvent *raw = (XIRawEvent *)event.xcookie.data;
+
 				switch(event.xcookie.evtype){
 					case XI_RawKeyPress:
-						printf("pressed");
+						printf("pressed, keycode: %d \n", raw->detail);
+						fflush(stdout);
+						break;
 					case XI_RawKeyRelease:
-						printf("released");
+						printf("released, keycode: %d \n", raw->detail);
+						fflush(stdout);
+						break;
 				}	
 		}
 
