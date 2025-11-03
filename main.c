@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <X11/extensions/XInput2.h>
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
 
 #define WIDTH 400
 #define HEIGHT 400
@@ -8,7 +9,21 @@
 void main(){
 	Display *display = XOpenDisplay(0);
 	Window   root 	 = DefaultRootWindow(display);
+/*
+ * THIS CODE OF SETTING TRANSPARENT WINDOW IS NOT MINE!!!
+ */
+ 	XVisualInfo vinfo; XMatchVisualInfo(display, DefaultScreen(display), 32, TrueColor, &vinfo);
 
+    	XSetWindowAttributes attr;
+    	attr.colormap = XCreateColormap(display, root, vinfo.visual, AllocNone);
+    	attr.border_pixel = 0;
+    	attr.background_pixel = 0;
+/*CODE THATS NOT MINE ENDS HERE */
+
+    	Window window = XCreateWindow(display, root, 0, 0, 300, 200, 0, vinfo.depth, InputOutput, vinfo.visual, CWColormap | CWBorderPixel | CWBackPixel, &attr);
+
+
+	XMapWindow(display, window);
 	XIEventMask emask;
 	
 	unsigned char mask[XIMaskLen(XI_LASTEVENT)] = {0};
@@ -22,6 +37,7 @@ void main(){
 	XISelectEvents(display, root, &emask, 1);\
 
 	XSync(display, False);
+
 
 	while(true){
 		XEvent event;
