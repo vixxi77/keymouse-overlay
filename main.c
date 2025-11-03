@@ -1,38 +1,43 @@
 #include <stdio.h>
-#include <SDL2/SDL.h>
-
+#include <X11/extensions/XInput2.h>
+#include <X11/Xlib.h>
 
 #define WIDTH 400
 #define HEIGHT 400
 
 void main(){
-	SDL_Init(SDL_INIT_VIDEO);
-	int opacity;
-	SDL_Window *window;
-	SDL_Renderer *renderer;
-	SDL_Event event;
+	Display *display = XOpenDisplay(0);
+	Window   root 	 = DefaultRootWindow(display);
 
-	window  = SDL_CreateWindow("keymouse", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
-	renderer = SDL_CreateRenderer(window, -1, 0);
-	opacity = SDL_SetWindowOpacity(window, 0.5f);
+	XIEventMask emask;
+	
+	unsigned char mask[XIMaskLen(XI_LASTEVENT)] = {0};
+    	emask.deviceid = XIAllMasterDevices;
+        emask.mask = mask;
+        emask.mask_len = sizeof(mask);
 
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        XISetMask(emask.mask, XI_RawKeyPress);
+        XISetMask(emask.mask, XI_RawKeyRelease);
 
-	printf("Opacity: %d", opacity);
+	XISelectEvents(display, root, &emask, 1);\
 
-	int running = 1;
-	while(running){
-		while(SDL_PollEvent(&event)){
-			switch(event.type){
-				case SDL_QUIT:
-					running = 0;
-					break;
-			}	
+	XSync(display, False);
+
+	while(true){
+		XEvent event;
+		XNextEvent(display, &event);
+
+		if(XGetEventData(display, &event.xcookie) && event.xcookie.type == GenericEvent){
+				switch(event.xcookie.evtype){
+					case XI_RawKeyPress:
+						printf("pressed");
+					case XI_RawKeyRelease:
+						printf("released");
+				}	
 		}
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-		SDL_RenderClear(renderer);
 
-		SDL_RenderPresent(renderer);
-		SDL_Delay(16);
+		XFreeEventData(display, &event.xcookie);		
 	}
+
+	XCloseDisplay(display);
 }
