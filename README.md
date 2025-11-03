@@ -2,6 +2,10 @@ A simple keyboard and mouse press visual overaly for X11.
 
 DONE:
   Global keyboard press detection with XInput2
+  Add X11 Window
+  Make that shi transparent\
+  
 TODO:
-  1. Add X11 window
-  2. Make that shi transparent
+  1. Draw some shi on input
+  2. Get a png or something of a keyboard wireframe drawn on there
+  3. Key layout corresponding to keybaord press
