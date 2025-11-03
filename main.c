@@ -33,11 +33,9 @@ void main(){
 				switch(event.xcookie.evtype){
 					case XI_RawKeyPress:
 						printf("pressed, keycode: %d \n", raw->detail);
-						fflush(stdout);
 						break;
 					case XI_RawKeyRelease:
 						printf("released, keycode: %d \n", raw->detail);
-						fflush(stdout);
 						break;
 				}	
 		}
