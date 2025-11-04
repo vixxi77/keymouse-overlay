@@ -1,6 +1,6 @@
 CC = gcc
 
-LDFLAGS = -lX11 -lXi
+LDFLAGS = -lX11 -lXi -lcairo
 
 program:
 	$(CC) $(LDFLAGS) main.c -o program && ./program
