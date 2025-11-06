@@ -63,15 +63,38 @@ void main(){
 		if(XGetEventData(display, &event.xcookie) && event.xcookie.type == GenericEvent){
 				XIRawEvent *raw = (XIRawEvent *)event.xcookie.data;
 
+
 				switch(event.xcookie.evtype){
 					case XI_RawKeyPress:
 						printf("pressed, keycode: %d \n", raw->detail);
-						XFillRectangle(display, window, gc, (W_HEIGHT/2) - 50, (W_WIDTH/2) - 50, 100, 100);
-						break;
+						switch(raw->detail){
+							case 24: 
+								XFillRectangle(display, window, gc, 0, 0, 25, 25);
+								break;
+							case 25:
+								XFillRectangle(display, window, gc, 30, 0, 25, 25);
+								break;
+							case 26:
+								XFillRectangle(display, window, gc, 60, 0, 25, 25);
+								break;
+
+						}
+					break;
 					case XI_RawKeyRelease:
 						printf("released, keycode: %d \n", raw->detail);
-						XClearArea(display, window, (W_HEIGHT/2) - 50, (W_WIDTH/2) - 50, 100, 100, False);
-						break;
+						switch(raw->detail){
+							case 24: 
+								XClearArea(display, window, 0, 0, 25, 25, False);
+								break;
+							case 25:
+								XClearArea(display, window, 30, 0, 25, 25, False);
+								break;
+							case 26:
+								XClearArea(display, window, 60, 0, 25, 25, False);
+								break;
+
+						}
+					break;
 				}	
 		}
 
