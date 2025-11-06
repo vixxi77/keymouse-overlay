@@ -6,12 +6,13 @@
 #include <cairo/cairo.h>
 #include <cairo/cairo-xlib.h>
 
-#define WIDTH 400
-#define HEIGHT 400
+#define W_WIDTH 400
+#define W_HEIGHT 400
 
 void main(){
 	Display *display = XOpenDisplay(0);
 	Window   root 	 = DefaultRootWindow(display);
+	GC gc;
 /*
  * THIS CODE OF SETTING TRANSPARENT WINDOW IS NOT MINE!!!
  */
@@ -24,12 +25,14 @@ void main(){
     	attr.background_pixel = 0;
 /*CODE THATS NOT MINE ENDS HERE */
 
-    	Window window = XCreateWindow(display, root, 0, 0, 1000, 800, 0, vinfo.depth, InputOutput, vinfo.visual, CWColormap | CWBorderPixel | CWBackPixel, &attr);
+    	Window window = XCreateWindow(display, root, 0, 0, W_WIDTH, W_HEIGHT, 0, vinfo.depth, InputOutput, vinfo.visual, CWColormap | CWBorderPixel | CWBackPixel, &attr);
 
 /*TEST CODE */	
+	/*
 	cairo_surface_t *surface = cairo_xlib_surface_create(display, window, vinfo.visual, 1000, 800);
 	cairo_t *cr = cairo_create(surface);
 	cairo_surface_t *png = cairo_image_surface_create_from_png("keyboard60he.png");
+	*/
 /*TEST CODE */
 
 
@@ -48,6 +51,9 @@ void main(){
 
 	XSync(display, False);
 
+	gc = XCreateGC(display, window, 0, 0);
+    	XSetForeground( display, gc, WhitePixel(display, 0));
+
 
 	while(true){
 		XEvent event;
@@ -60,18 +66,22 @@ void main(){
 				switch(event.xcookie.evtype){
 					case XI_RawKeyPress:
 						printf("pressed, keycode: %d \n", raw->detail);
+						XFillRectangle(display, window, gc, (W_HEIGHT/2) - 50, (W_WIDTH/2) - 50, 100, 100);
 						break;
 					case XI_RawKeyRelease:
 						printf("released, keycode: %d \n", raw->detail);
+						XClearArea(display, window, (W_HEIGHT/2) - 50, (W_WIDTH/2) - 50, 100, 100, False);
 						break;
 				}	
 		}
 
 		XFreeEventData(display, &event.xcookie);		
-
+		
+		/*
 		cairo_set_source_surface(cr, png, 0, 0);
 		cairo_paint(cr);
 		cairo_surface_flush(surface);
+		*/
 
 	}
 
