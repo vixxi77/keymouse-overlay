@@ -1,13 +1,12 @@
 #include <stdio.h>
-#include <time.h>
 #include <X11/extensions/XInput2.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include <cairo/cairo.h>
-#include <cairo/cairo-xlib.h>
 
 #define W_WIDTH 400
 #define W_HEIGHT 400
+#define true 1
+#define false 0
 
 void main(){
 	Display *display = XOpenDisplay(0);
@@ -26,15 +25,6 @@ void main(){
 /*CODE THATS NOT MINE ENDS HERE */
 
     	Window window = XCreateWindow(display, root, 0, 0, W_WIDTH, W_HEIGHT, 0, vinfo.depth, InputOutput, vinfo.visual, CWColormap | CWBorderPixel | CWBackPixel, &attr);
-
-/*TEST CODE */	
-	/*
-	cairo_surface_t *surface = cairo_xlib_surface_create(display, window, vinfo.visual, 1000, 800);
-	cairo_t *cr = cairo_create(surface);
-	cairo_surface_t *png = cairo_image_surface_create_from_png("keyboard60he.png");
-	*/
-/*TEST CODE */
-
 
 	XMapWindow(display, window);
 	XIEventMask emask;
