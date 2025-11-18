@@ -8,7 +8,7 @@
 #define true 1
 #define false 0
 
-void main(){
+int main(){
 	Display *display = XOpenDisplay(0);
 	Window   root 	 = DefaultRootWindow(display);
 	GC gc;
@@ -99,4 +99,5 @@ void main(){
 	}
 
 	XCloseDisplay(display);
+	return 0;
 }
